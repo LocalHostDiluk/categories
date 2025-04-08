@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import { getAllCategories } from "../services/categoriaService.js";// <-- Esta función debe obtener las categorías desde tu BD
 
 dotenv.config();
-const RABBITMQ_URL = process.env.RABBITMQ_URL || "amqp://localhost";
+const RABBITMQ_URL = process.env.RABBITMQ_HOST;
 const QUEUE_NAME = "categorias_actualizadas";
 
 let channel = null;
