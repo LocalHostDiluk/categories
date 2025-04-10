@@ -50,3 +50,38 @@ export const deleteCategory = async (req, res) => {
     }
 };
 
+// 🔹 Actualizar una categoría
+export const updateCategory = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { nombre } = req.body;
+
+        const category = await Category.findByPk(id);
+
+        if (!category) {
+            return res.status(404).json({ message: "Categoría no encontrada" });
+        }
+
+        const oldNombre = category.nombre;
+
+        await category.update({
+            nombre: nombre || category.nombre,
+        });
+
+        // Enviar actualización a RabbitMQ
+        await publishCategoryUpdate({
+            action: "update",
+            oldNombre,
+            nombre: nombre || category.nombre,
+        });
+
+        return res.status(200).json({
+            message: "Categoría actualizada correctamente",
+            data: category,
+        });
+    } catch (error) {
+        console.error("❌ Error al actualizar categoría:", error);
+        return res.status(500).json({ message: "Error al actualizar categoría" });
+    }
+};
+
