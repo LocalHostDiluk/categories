@@ -54,7 +54,7 @@ export const deleteCategory = async (req, res) => {
 export const updateCategory = async (req, res) => {
     try {
         const { id } = req.params;
-        const { nombre } = req.body;
+        const { nombre, descripcion } = req.body;
 
         const category = await Category.findByPk(id);
 
@@ -66,6 +66,7 @@ export const updateCategory = async (req, res) => {
 
         await category.update({
             nombre: nombre || category.nombre,
+            descripcion: descripcion || category.descripcion
         });
 
         // Enviar actualización a RabbitMQ
